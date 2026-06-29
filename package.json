@@ -1,0 +1,13 @@
+{
+  "name": "dev-tools-site",
+  "version": "1.0.0",
+  "description": "开发工具集合网站",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve . -l 3000"
+  },
+  "keywords": ["开发工具", "在线工具", "JSON格式化", "正则表达式", "编码工具"],
+  "author": "",
+  "license": "MIT"
+}
