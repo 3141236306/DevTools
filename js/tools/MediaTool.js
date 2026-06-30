@@ -18,7 +18,7 @@ export class MediaTool extends BaseComponent {
 
                     <div class="upload-zone" id="mediaUploadZone">
                         <div class="upload-icon">&#127909;</div>
-                        <p class="upload-text">拖拽视频文件到此处，或点击选择</p>
+                        <p class="upload-text">拖拽视频到此处，或点击选择</p>
                         <p class="upload-hint">支持 MP4 / WebM / MOV / AVI，最大 500MB</p>
                         <input type="file" id="mediaFileInput" accept="video/*" hidden>
                     </div>

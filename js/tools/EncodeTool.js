@@ -18,6 +18,7 @@ export class EncodeTool extends BaseComponent {
                         <button class="tab-btn" data-tab="base64">Base64文本</button>
                         <button class="tab-btn" data-tab="html">HTML实体</button>
                         <button class="tab-btn" data-tab="img">图片Base64</button>
+                        <button class="tab-btn" data-tab="doc">文档Base64</button>
                     </div>
 
                     <div class="tab-content active" id="url-tab">
@@ -109,6 +110,69 @@ export class EncodeTool extends BaseComponent {
                         </div>
                     </div>
 
+                    <div class="tab-content" id="doc-tab">
+                        <div class="img-encode-section">
+                            <div class="img-encode-mode-tabs">
+                                <button class="btn btn-ghost active" id="docEncodeModeBtn">文档 → Base64</button>
+                                <button class="btn btn-ghost" id="docDecodeModeBtn">Base64 → 文档</button>
+                            </div>
+
+                            <div id="docEncodePanel">
+                                <div class="upload-zone" id="docUploadZone">
+                                    <div class="upload-icon">&#128196;</div>
+                                    <p class="upload-text">拖拽文档到此处，或点击选择</p>
+                                    <p class="upload-hint">支持 Excel / PDF / Word / PPT / TXT / CSV</p>
+                                    <input type="file" id="docFileInput" accept=".xls,.xlsx,.pdf,.doc,.docx,.txt,.csv,.ppt,.pptx" hidden>
+                                </div>
+                                <div class="img-preview-row" id="docPreviewRow" style="display:none;">
+                                    <div class="img-preview-box doc-file-icon" id="docFileIcon"></div>
+                                    <div class="img-preview-info" id="docPreviewInfo"></div>
+                                </div>
+                                <div class="button-group">
+                                    <button id="docEncodeBtn" class="btn" disabled>编码为Base64</button>
+                                    <button id="docCopyStrBtn" class="btn btn-accent" disabled>复制Base64字符串</button>
+                                    <button id="docDownloadStrBtn" class="btn btn-secondary" disabled>下载为txt</button>
+                                    <button id="docResetBtn" class="btn btn-ghost">重新选择</button>
+                                </div>
+                                <div class="form-group" id="docBase64ResultGroup" style="display:none;">
+                                    <label>Base64结果：</label>
+                                    <div id="docBase64Result" class="result-area"></div>
+                                </div>
+                            </div>
+
+                            <div id="docDecodePanel" style="display:none;">
+                                <div class="form-group">
+                                    <label for="docBase64Input">粘贴Base64字符串：</label>
+                                    <textarea id="docBase64Input" placeholder="粘贴文档的Base64编码字符串（支持带 data:mime;base64, 前缀或纯字符串）..."></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label>文档类型：</label>
+                                    <div class="doc-type-radios">
+                                        <label class="doc-type-radio"><input type="radio" name="docMime" value="application/pdf" checked><span>PDF</span></label>
+                                        <label class="doc-type-radio"><input type="radio" name="docMime" value="application/vnd.ms-excel"><span>Excel (.xls)</span></label>
+                                        <label class="doc-type-radio"><input type="radio" name="docMime" value="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"><span>Excel (.xlsx)</span></label>
+                                        <label class="doc-type-radio"><input type="radio" name="docMime" value="application/msword"><span>Word (.doc)</span></label>
+                                        <label class="doc-type-radio"><input type="radio" name="docMime" value="application/vnd.openxmlformats-officedocument.wordprocessingml.document"><span>Word (.docx)</span></label>
+                                        <label class="doc-type-radio"><input type="radio" name="docMime" value="text/plain"><span>TXT</span></label>
+                                        <label class="doc-type-radio"><input type="radio" name="docMime" value="application/vnd.ms-powerpoint"><span>PowerPoint (.ppt)</span></label>
+                                        <label class="doc-type-radio"><input type="radio" name="docMime" value="application/vnd.openxmlformats-officedocument.presentationml.presentation"><span>PowerPoint (.pptx)</span></label>
+                                        <label class="doc-type-radio"><input type="radio" name="docMime" value="text/csv"><span>CSV</span></label>
+                                    </div>
+                                </div>
+                                <div class="button-group">
+                                    <button id="docDecodeBtn" class="btn">解码为文档</button>
+                                    <button id="docCopyDecodedBtn" class="btn btn-accent" disabled>复制Base64</button>
+                                    <button id="docDecodeDownloadBtn" class="btn btn-secondary" disabled>下载文档</button>
+                                    <button id="docDecodeResetBtn" class="btn btn-ghost">重新输入</button>
+                                </div>
+                                <div class="img-preview-row" id="docDecodePreviewRow" style="display:none;">
+                                    <div class="img-preview-box doc-file-icon" id="docDecodeFileIcon"></div>
+                                    <div class="img-preview-info" id="docDecodePreviewInfo"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="form-group" id="textResultGroup">
                         <label>结果：</label>
                         <div id="encodeOutput" class="result-area"></div>
@@ -130,6 +194,9 @@ export class EncodeTool extends BaseComponent {
 
                             <h4>图片Base64</h4>
                             <p>将图片转换为Base64字符串，可用于CSS内嵌图片、JSON传输等场景。</p>
+
+                            <h4>文档Base64</h4>
+                            <p>将文档（Excel、PDF、Word、PPT等）转换为Base64字符串，用于数据传输、存储或嵌入。支持解码Base64字符串还原为文档文件。</p>
                         </div>
                     </div>
 
@@ -155,6 +222,7 @@ export class EncodeTool extends BaseComponent {
         this.setupBase64();
         this.setupHtml();
         this.setupImage();
+        this.setupDoc();
     }
 
     setupTabs() {
@@ -169,7 +237,7 @@ export class EncodeTool extends BaseComponent {
                 this.currentTab = tab;
 
                 const textResult = this.querySelector('#textResultGroup');
-                textResult.style.display = tab === 'img' ? 'none' : '';
+                textResult.style.display = (tab === 'img' || tab === 'doc') ? 'none' : '';
             });
         });
     }
@@ -314,6 +382,258 @@ export class EncodeTool extends BaseComponent {
         this.addEventListener(this.querySelector('#imgDecodeCopyBtn'), 'click', () => this.copyDecodedImg());
         this.addEventListener(this.querySelector('#imgDecodeDownloadBtn'), 'click', () => this.downloadDecodedImg());
         this.addEventListener(this.querySelector('#imgDecodeResetBtn'), 'click', () => this.resetImgDecode());
+    }
+
+    setupDoc() {
+        this.docFile = null;
+        this.docDataUrl = null;
+        this.decodedDocBlob = null;
+
+        const uploadZone = this.querySelector('#docUploadZone');
+        const fileInput = this.querySelector('#docFileInput');
+
+        this.addEventListener(uploadZone, 'click', () => fileInput.click());
+        this.addEventListener(fileInput, 'change', (e) => {
+            if (e.target.files[0]) this.handleDocFile(e.target.files[0]);
+        });
+        this.addEventListener(uploadZone, 'dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+        this.addEventListener(uploadZone, 'dragleave', () => {
+            uploadZone.classList.remove('dragover');
+        });
+        this.addEventListener(uploadZone, 'drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) this.handleDocFile(e.dataTransfer.files[0]);
+        });
+
+        this.addEventListener(this.querySelector('#docEncodeBtn'), 'click', () => this.encodeDoc());
+        this.addEventListener(this.querySelector('#docCopyStrBtn'), 'click', () => this.copyDocBase64());
+        this.addEventListener(this.querySelector('#docDownloadStrBtn'), 'click', () => this.downloadDocBase64());
+        this.addEventListener(this.querySelector('#docResetBtn'), 'click', () => this.resetDocEncode());
+
+        this.addEventListener(this.querySelector('#docEncodeModeBtn'), 'click', () => {
+            this.querySelector('#docEncodeModeBtn').classList.add('active');
+            this.querySelector('#docDecodeModeBtn').classList.remove('active');
+            this.querySelector('#docEncodePanel').style.display = '';
+            this.querySelector('#docDecodePanel').style.display = 'none';
+        });
+        this.addEventListener(this.querySelector('#docDecodeModeBtn'), 'click', () => {
+            this.querySelector('#docDecodeModeBtn').classList.add('active');
+            this.querySelector('#docEncodeModeBtn').classList.remove('active');
+            this.querySelector('#docDecodePanel').style.display = '';
+            this.querySelector('#docEncodePanel').style.display = 'none';
+        });
+
+        this.addEventListener(this.querySelector('#docDecodeBtn'), 'click', () => this.decodeDoc());
+        this.addEventListener(this.querySelector('#docDecodeDownloadBtn'), 'click', () => this.downloadDecodedDoc());
+        this.addEventListener(this.querySelector('#docCopyDecodedBtn'), 'click', () => this.copyDecodedDocBase64());
+        this.addEventListener(this.querySelector('#docDecodeResetBtn'), 'click', () => this.resetDocDecode());
+    }
+
+    getDocIcon(ext) {
+        const icons = {
+            pdf: '&#128196;', xls: '&#128202;', xlsx: '&#128202;',
+            doc: '&#128196;', docx: '&#128196;',
+            ppt: '&#128247;', pptx: '&#128247;',
+            txt: '&#128196;', csv: '&#128202;'
+        };
+        return icons[ext] || '&#128196;';
+    }
+
+    handleDocFile(file) {
+        if (!file) {
+            alert('请选择文档文件');
+            return;
+        }
+        const allowedTypes = [
+            'application/pdf',
+            'application/vnd.ms-excel',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'text/plain',
+            'application/vnd.ms-powerpoint',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+            'text/csv',
+            'application/octet-stream'
+        ];
+        const allowedExts = ['.xls', '.xlsx', '.pdf', '.doc', '.docx', '.txt', '.ppt', '.pptx', '.csv'];
+        const fileName = file.name.toLowerCase();
+        const hasValidExt = allowedExts.some(ext => fileName.endsWith(ext));
+        if (!allowedTypes.includes(file.type) && !hasValidExt) {
+            alert('不支持的文件类型，请选择 Excel/PDF/Word/PPT/TXT/CSV 文件');
+            return;
+        }
+        this.docFile = file;
+        this.docFileExt = fileName.split('.').pop();
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            this.docDataUrl = e.target.result;
+            const sizeStr = this.formatSize(file.size);
+            this.querySelector('#docFileIcon').innerHTML = this.getDocIcon(this.docFileExt);
+            this.querySelector('#docPreviewInfo').textContent = `${file.name} — ${sizeStr} — ${file.type || this.docFileExt}`;
+            this.querySelector('#docPreviewRow').style.display = 'flex';
+            this.querySelector('#docUploadZone').style.display = 'none';
+            this.querySelector('#docEncodeBtn').disabled = false;
+            this.querySelector('#docCopyStrBtn').disabled = true;
+            this.querySelector('#docDownloadStrBtn').disabled = true;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    encodeDoc() {
+        if (!this.docDataUrl) return;
+        const resultGroup = this.querySelector('#docBase64ResultGroup');
+        const resultArea = this.querySelector('#docBase64Result');
+        resultArea.textContent = this.docDataUrl;
+        resultArea.classList.remove('error');
+        resultArea.classList.add('success');
+        resultGroup.style.display = '';
+        this.querySelector('#docCopyStrBtn').disabled = false;
+        this.querySelector('#docDownloadStrBtn').disabled = false;
+    }
+
+    copyDocBase64() {
+        if (!this.docDataUrl) return;
+        navigator.clipboard.writeText(this.docDataUrl).then(() => {
+            alert('Base64 字符串已复制到剪贴板');
+        }).catch(() => {
+            const ta = document.createElement('textarea');
+            ta.value = this.docDataUrl;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            alert('Base64 字符串已复制到剪贴板');
+        });
+    }
+
+    downloadDocBase64() {
+        if (!this.docDataUrl) return;
+        const blob = new Blob([this.docDataUrl], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `${this.docFile.name.replace(/\.[^.]+$/, '')}_base64.txt`;
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+
+    resetDocEncode() {
+        this.docFile = null;
+        this.docDataUrl = null;
+        this.docFileExt = null;
+        this.querySelector('#docFileInput').value = '';
+        this.querySelector('#docUploadZone').style.display = '';
+        this.querySelector('#docPreviewRow').style.display = 'none';
+        this.querySelector('#docBase64ResultGroup').style.display = 'none';
+        this.querySelector('#docEncodeBtn').disabled = true;
+        this.querySelector('#docCopyStrBtn').disabled = true;
+        this.querySelector('#docDownloadStrBtn').disabled = true;
+    }
+
+    decodeDoc() {
+        const input = this.querySelector('#docBase64Input').value.trim();
+        const checkedRadio = this.querySelector('input[name="docMime"]:checked');
+        const previewRow = this.querySelector('#docDecodePreviewRow');
+        const info = this.querySelector('#docDecodePreviewInfo');
+
+        if (!input) {
+            alert('请输入Base64字符串');
+            return;
+        }
+
+        let dataUrl = input;
+        let mime = checkedRadio ? checkedRadio.value : 'application/pdf';
+        let ext = '';
+
+        if (dataUrl.startsWith('data:')) {
+            const mimeMatch = dataUrl.match(/data:([^;]+);/);
+            if (mimeMatch) {
+                mime = mimeMatch[1];
+            }
+        } else {
+            dataUrl = `data:${mime};base64,${dataUrl}`;
+        }
+
+        const mimeExtMap = {
+            'application/pdf': 'pdf',
+            'application/vnd.ms-excel': 'xls',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+            'application/msword': 'doc',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+            'text/plain': 'txt',
+            'application/vnd.ms-powerpoint': 'ppt',
+            'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'pptx',
+            'text/csv': 'csv'
+        };
+        ext = mimeExtMap[mime] || 'bin';
+
+        try {
+            const byteStr = atob(dataUrl.split(',')[1] || '');
+            const size = byteStr.length;
+
+            this.querySelector('#docDecodeFileIcon').innerHTML = this.getDocIcon(ext);
+            info.textContent = `类型: ${mime} — 大小: ${this.formatSize(size)} — 格式: .${ext}`;
+            previewRow.style.display = 'flex';
+
+            this._decodedDocDataUrl = dataUrl;
+            this._decodedDocMime = mime;
+            this._decodedDocExt = ext;
+            this.querySelector('#docDecodeDownloadBtn').disabled = false;
+            this.querySelector('#docCopyDecodedBtn').disabled = false;
+        } catch (e) {
+            alert('Base64 解码失败，请检查字符串是否为有效的文档数据');
+            previewRow.style.display = 'none';
+            this.querySelector('#docDecodeDownloadBtn').disabled = true;
+            this.querySelector('#docCopyDecodedBtn').disabled = true;
+        }
+    }
+
+    downloadDecodedDoc() {
+        if (!this._decodedDocDataUrl) return;
+        const byteStr = atob(this._decodedDocDataUrl.split(',')[1] || '');
+        const ab = new ArrayBuffer(byteStr.length);
+        const ia = new Uint8Array(ab);
+        for (let i = 0; i < byteStr.length; i++) {
+            ia[i] = byteStr.charCodeAt(i);
+        }
+        const blob = new Blob([ab], { type: this._decodedDocMime || 'application/octet-stream' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `decoded_document.${this._decodedDocExt || 'bin'}`;
+        link.href = url;
+        link.click();
+        URL.revokeObjectURL(url);
+    }
+
+    copyDecodedDocBase64() {
+        if (!this._decodedDocDataUrl) return;
+        const raw = this._decodedDocDataUrl.split(',')[1] || '';
+        navigator.clipboard.writeText(raw).then(() => {
+            alert('Base64 字符串已复制到剪贴板');
+        }).catch(() => {
+            const ta = document.createElement('textarea');
+            ta.value = raw;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            document.body.removeChild(ta);
+            alert('Base64 字符串已复制到剪贴板');
+        });
+    }
+
+    resetDocDecode() {
+        this._decodedDocDataUrl = null;
+        this._decodedDocMime = null;
+        this._decodedDocExt = null;
+        this.querySelector('#docBase64Input').value = '';
+        this.querySelector('#docDecodePreviewRow').style.display = 'none';
+        this.querySelector('#docDecodeDownloadBtn').disabled = true;
+        this.querySelector('#docCopyDecodedBtn').disabled = true;
     }
 
     handleImgFile(file) {

@@ -140,6 +140,13 @@ const GIT_DATA = {
     ],
 };
 
+const TOOLS_DATA = {
+    '在线工具': [
+        { name: 'natapp 内网穿透', desc: '快速搭建内网隧道，支持 HTTP/TCP/UDP 等协议，开发调试利器', url: 'https://natapp.cn/tunnel/lists', icon: 'Nt', tags: 'natapp 内网穿透 隧道 调试 工具' },
+        { name: 'PDF 水印工具', desc: '在线为 PDF 文件添加文字或图片水印，支持批量处理', url: 'https://www.wdku.net/PDFWatermark', icon: 'Pw', tags: 'pdf 水印 工具 在线 处理' },
+    ],
+};
+
 const BLOG_DATA = {
     '技术社区': [
         { name: 'CSDN', desc: '国内最大的 IT 社区，技术文章资源丰富', url: 'https://www.csdn.net/', icon: 'Cs', tags: 'csdn 博客 技术社区 国内' },
@@ -208,6 +215,7 @@ export class TechStack extends BaseComponent {
         const gitHtml = renderCategory(GIT_DATA, 'git-tech');
         const iconHtml = renderCategory(ICON_DATA, 'icon-tech');
         const platformHtml = renderCategory(PLATFORM_DATA, 'platform-tech');
+        const toolsHtml = renderCategory(TOOLS_DATA, 'tools-tech');
 
         return `
             <div class="tool-page">
@@ -228,6 +236,7 @@ export class TechStack extends BaseComponent {
                         <button class="tab-btn" data-tab="git">Git</button>
                         <button class="tab-btn" data-tab="icon">图标库</button>
                         <button class="tab-btn" data-tab="platform">第三方平台</button>
+                        <button class="tab-btn" data-tab="tools">在线工具</button>
                     </div>
 
                     <div class="tab-content active" id="fe-tab">${feHtml}</div>
@@ -236,6 +245,7 @@ export class TechStack extends BaseComponent {
                     <div class="tab-content" id="git-tab">${gitHtml}</div>
                     <div class="tab-content" id="icon-tab">${iconHtml}</div>
                     <div class="tab-content" id="platform-tab">${platformHtml}</div>
+                    <div class="tab-content" id="tools-tab">${toolsHtml}</div>
 
                     <div class="search-empty" id="techEmpty" style="display:none;">
                         <p>没有找到匹配的技术栈</p>

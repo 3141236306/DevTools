@@ -17,7 +17,7 @@ export class ImageTool extends BaseComponent {
 
                     <div class="upload-zone" id="uploadZone">
                         <div class="upload-icon">&#128247;</div>
-                        <p class="upload-text">拖拽图片到此处，或点击选择文件</p>
+                        <p class="upload-text">拖拽图片到此处，或点击选择</p>
                         <p class="upload-hint">支持 JPG / PNG / WebP，最大 50MB</p>
                         <input type="file" id="fileInput" accept="image/*" hidden>
                     </div>
