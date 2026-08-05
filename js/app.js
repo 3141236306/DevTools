@@ -5,9 +5,12 @@ import { EncodeTool } from './tools/EncodeTool.js';
 import { ColorTool } from './tools/ColorTool.js';
 import { ImageTool } from './tools/ImageTool.js';
 import { MediaTool } from './tools/MediaTool.js';
+import { QrTool } from './tools/QrTool.js';
 import { TechStack } from './tools/TechStack.js';
 import { CalculatorTool } from './tools/CalculatorTool.js';
 import { AiTool } from './tools/AiTool.js';
+import { TimeTool } from './tools/TimeTool.js';
+import { CodeSnippetTool } from './tools/CodeSnippetTool.js';
 
 class App {
     constructor() {
@@ -17,11 +20,14 @@ class App {
             'json': JsonTool,
             'regex': RegexTool,
             'encode': EncodeTool,
+            'snippets': CodeSnippetTool,
             'color': ColorTool,
             'image': ImageTool,
             'media': MediaTool,
+            'qr': QrTool,
             'tech': TechStack,
             'calc': CalculatorTool,
+            'time': TimeTool,
             'ai': AiTool
         };
 
