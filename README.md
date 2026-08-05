@@ -10,6 +10,7 @@
 - **颜色工具**: 颜色选择器、HEX/RGB/HSL 转换、调色板生成
 - **图片工具**: 图片压缩，支持 JPG/PNG/WebP 格式，可调节压缩质量和目标尺寸
 - **媒体工具**: 视频压缩，支持 MP4/WebM/MOV/AVI 格式，可调节输出格式、质量和分辨率
+- **二维码工具**: 文本、链接、小图片生成二维码，支持自定义颜色、导出尺寸和中心图片
 - **计算器工具**: 科学计算器、单位换算、汇率换算（实时汇率）
 - **AI 工具**: AI 对话、文本生成、代码辅助
 - **技术栈导航**: 前端/后端/博客/Git/图标库/第三方平台/在线工具资源导航，支持搜索
@@ -43,6 +44,7 @@ dev-tools-site/
 │       ├── ColorTool.js        # 颜色工具
 │       ├── ImageTool.js        # 图片压缩工具
 │       ├── MediaTool.js        # 视频压缩工具
+│       ├── QrTool.js           # 二维码生成工具
 │       ├── CalculatorTool.js   # 计算器工具
 │       ├── AiTool.js           # AI 工具
 │       └── TechStack.js        # 技术栈导航
@@ -90,6 +92,7 @@ dev-tools-site/
 | `ColorTool` | `ColorTool.js` | 颜色选择、转换、调色板 |
 | `ImageTool` | `ImageTool.js` | 图片压缩（JPG/PNG/WebP） |
 | `MediaTool` | `MediaTool.js` | 视频压缩（MP4/WebM/MOV/AVI） |
+| `QrTool` | `QrTool.js` | 文本、链接、小图片生成二维码，支持中心图片 |
 | `CalculatorTool` | `CalculatorTool.js` | 科学计算、单位换算、汇率换算 |
 | `AiTool` | `AiTool.js` | AI 对话和文本生成 |
 | `TechStack` | `TechStack.js` | 技术栈资源导航 |
