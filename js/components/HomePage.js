@@ -4,10 +4,13 @@ const TOOLS = [
     { name: 'JSON 工具', desc: '格式化、压缩、排序、验证 JSON 数据', icon: '{ }', hash: 'json', tags: 'json 格式化 压缩 验证' },
     { name: '正则表达式', desc: '实时测试正则匹配，内置常用表达式', icon: '.*', hash: 'regex', tags: '正则 regex 匹配 测试' },
     { name: '编码工具', desc: 'URL / Base64 / HTML 实体编码解码、图片Base64', icon: '&lt;/&gt;', hash: 'encode', tags: '编码 解码 base64 url html 图片' },
+    { name: '代码片段', desc: '本地保存、检索、复制常用代码片段', icon: 'fn', hash: 'snippets', tags: '代码片段 snippet code 保存 复制 模板' },
     { name: '颜色工具', desc: '取色、HEX / RGB / HSL 互转、随机配色', icon: '●', hash: 'color', tags: '颜色 配色 hex rgb hsl 取色' },
     { name: '图片压缩', desc: 'JPG / PNG / WebP 压缩、缩放、导出', icon: '🖼', hash: 'image', tags: '图片 压缩 jpg png webp 缩放' },
     { name: '视频压缩', desc: '视频格式转换、截帧、尺寸调整、压缩导出', icon: '🎬', hash: 'media', tags: '视频 媒体 截帧 转换 压缩' },
+    { name: '二维码生成', desc: '文本、链接、小图片生成二维码，支持中心图片', icon: '▦', hash: 'qr', tags: '二维码 qrcode qr 文本 链接 图片 logo' },
     { name: '实用计算器', desc: '个税计算、汇率换算、工资计算', icon: '🧮', hash: 'calc', tags: '计算器 税费 汇率 工资 个税 换算' },
+    { name: '时间转换器', desc: 'Unix 时间戳、本地时间、UTC 和常用时区互转', icon: '⏱', hash: 'time', tags: '时间 时间戳 unix timestamp utc 时区 转换' },
     { name: '技术栈导航', desc: '前端/后端/博客常用技术栈官网地址一键跳转', icon: '📚', hash: 'tech', tags: '技术栈 前端 后端 vue react java' },
     { name: 'AI 工具集合', desc: '国内外AI工具导航，对话/绘画/编程/视频/音频', icon: '🤖', hash: 'ai', tags: 'ai 人工智能 chatgpt 绘画 编程 工具' },
 ];
